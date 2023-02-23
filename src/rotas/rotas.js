@@ -1,5 +1,5 @@
 const express = require('express');
-const { cadastroUsuario } = require('../controladores.js/cadastroUsuario');
+const { cadastroUsuario } = require('../controladores/cadastroUsuario');
 
 const rotas = express.Router();
 
