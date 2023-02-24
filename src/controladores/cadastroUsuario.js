@@ -10,8 +10,6 @@ const cadastroUsuario = async (req, res) => {
 
         const validarBody = await validarEntradas(nome, email, senha);
 
-        console.log(await validarEntradas(nome, email, senha));
-
         if (validarBody.length > 0) {
 
             return res.status(400).json(await validarEntradas(nome, email, senha));
