@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt')
 
 const atualizarUsuario = async (req, res) => {
     const { nome, email, senha } = req.body
-    const { usuario_id } = req
+    const { usuario } = req
 
     try {
         if (!nome) {
@@ -30,7 +30,7 @@ const atualizarUsuario = async (req, res) => {
         const atualizandoUsuario = await pool.query(`
         update usuarios
         set nome = $1, email = $2, senha = $3
-        where id = $4`, [nome, email, senhaCriptografada, usuario_id])
+        where id = $4`, [nome, email, senhaCriptografada, usuario.id])
 
         return res.status(200).json()
     } catch (error) {

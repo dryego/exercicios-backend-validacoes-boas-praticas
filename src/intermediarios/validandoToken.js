@@ -21,7 +21,7 @@ const validadorToken = async (req, res, next) => {
             return res.status(401).json({ "mensagem": "Não autorizado." })
         }
 
-        req.usuario_id = id
+        req.usuario = usuario.rows[0]
 
         next()
     } catch (error) {
