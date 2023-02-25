@@ -28,7 +28,7 @@ const login = async (req, res) => {
             return res.status(401).json({ "mensagem": "Usuário e/ou senha inválido(s)." })
         }
 
-        const token = jwt.sign({ eu: localizarUsuario.rows[0].id }, key, { expiresIn: '8h' })
+        const token = jwt.sign({ id: localizarUsuario.rows[0].id }, key, { expiresIn: '8h' })
 
         const { senha: _, ...usuario } = localizarUsuario.rows[0]
 
