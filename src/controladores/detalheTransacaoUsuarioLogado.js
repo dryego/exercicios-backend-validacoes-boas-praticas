@@ -1,9 +1,8 @@
 const pool = require("../conexão/conexao")
 
 const detalheTransacaoUsuarioLogado = async (req, res) => {
-    // try {
-    const id = req.usuario.id;
-    console.log(id);
+    //try {
+    const { id } = req.usuario;
 
     if (!id) {
         return res.status(400).json({ mensagem: 'Transação não encontrada.' })
