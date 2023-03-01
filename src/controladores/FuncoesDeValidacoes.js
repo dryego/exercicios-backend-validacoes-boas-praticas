@@ -29,6 +29,7 @@ const validarEntradas = async (nome, email, senha) => {
 }
 
 const buscarEmail = async (email) => {
+
     const localizarEmail = await pool.query('select * from usuarios where email = $1', [email]);
 
     if (localizarEmail.rowCount > 0) {
@@ -36,7 +37,42 @@ const buscarEmail = async (email) => {
     }
 }
 
+const validarEntradasTransacao = async (descricao, valor, data, categoria_id, tipo) => {
+    const erros = [];
+
+    if (!descricao) {
+        erros.push({ mensagem: 'Descrição é um campo obrigatório.' });
+    }
+
+    if (!valor) {
+        erros.push({ mensagem: 'Valor é um campo obrigatório.' });
+    }
+
+    if (!data) {
+        erros.push({ mensagem: 'Data é um campo obrigatório.' });
+    }
+    if (!categoria_id) {
+        erros.push({ mensagem: 'Id da categoria é um campo obrigatório.' });
+    }
+
+    if (tipo.toLowerCase() !== "saida" && tipo.toLowerCase() !== "entrada") {
+        erros.push({ mensagem: 'Tipo deve ser igual a ENTRADA ou SAÍDA' });
+    }
+
+    return erros;
+}
+
+const buscarTransacaoId = async (usuario, id) => {
+    const detalhesTransacoes = await pool.query('select * from transacoes where usuario_id = $1', [usuario.id]);
+
+    const buscaTransacao = detalhesTransacoes.rows.find(buscaId => buscaId.id == id);
+
+    return buscaTransacao;
+}
+
 module.exports = {
     validarEntradas,
-    buscarEmail
+    buscarEmail,
+    validarEntradasTransacao,
+    buscarTransacaoId
 };
