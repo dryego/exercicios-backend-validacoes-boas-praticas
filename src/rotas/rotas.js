@@ -4,7 +4,9 @@ const { cadastrarTransacaoUsuario } = require('../controladores/cadastrarTransac
 const { cadastroUsuario } = require('../controladores/cadastroUsuario');
 const { detralarUsuario } = require('../controladores/detalharUsuario');
 const { detalheTransacaoUsuarioLogado } = require('../controladores/detalheTransacaoUsuarioLogado');
+const { editarTransacao } = require('../controladores/editarTransacao');
 const { excluirTransacaoUsuario } = require('../controladores/excluirTransacao');
+const { extrato } = require('../controladores/extratoTransacoes');
 const login = require('../controladores/fazerLogin');
 const { listarCategorias } = require('../controladores/ListarCategorias');
 const { listarTransacoesUsuario } = require('../controladores/listarTransacoes');
@@ -23,6 +25,8 @@ rotas.get('/categoria', listarCategorias)
 rotas.get('/transacao', listarTransacoesUsuario)
 rotas.get('/transacao/:id', detalheTransacaoUsuarioLogado);
 rotas.post('/transacao', cadastrarTransacaoUsuario)
+rotas.put('/transacao/:id', editarTransacao);
 rotas.delete('/transacao/:id', excluirTransacaoUsuario)
+//rotas.get('/transacao/extrato', extrato);
 
 module.exports = rotas
