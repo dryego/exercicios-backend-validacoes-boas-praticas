@@ -32,7 +32,7 @@ const cadastrarTransacaoUsuario = async (req, res) => {
             "data": rows[0].data,
             "usuario_id": rows[0].usuario_id,
             "categoria_id": rows[0].categoria_id,
-            "categoria_nome": categoria.rows[0].descricao,
+            "categoria_nome": categoria.rows[0].descricao
         }
 
 

@@ -2,15 +2,18 @@ const pool = require('../conexão/conexao')
 
 const listarTransacoesUsuario = async (req, res) => {
     const { usuario } = req
+    const { filtro } = req.query
 
     try {
-        const { rows } = await pool.query('select * from transacoes where usuario_id = $1', [usuario.id])
 
-        const { rows: categoria } = await pool.query('select * from categorias where id = $1', [rows[0].categoria_id])
+        const filtrado = []
+
+        const { rows } = await pool.query('select * from transacoes where usuario_id = $1', [usuario.id])
 
         const transacoes = []
 
         for (const transacao of rows) {
+            const { rows: categoria } = await pool.query('select * from categorias where id = $1', [transacao.categoria_id])
             transacoes.push(
                 {
                     "id": transacao.id,
@@ -22,6 +25,17 @@ const listarTransacoesUsuario = async (req, res) => {
                     "categoria_id": transacao.categoria_id,
                     "categoria_nome": categoria[0].descricao
                 })
+        }
+        if (filtro) {
+            for (const categoria of filtro) {
+                for (const transacao of transacoes) {
+                    if (transacao.categoria_nome.toLowerCase() === categoria.toLowerCase()) {
+                        filtrado.push(transacao)
+                    }
+                }
+            }
+
+            return res.status(200).json(filtrado)
         }
 
 
