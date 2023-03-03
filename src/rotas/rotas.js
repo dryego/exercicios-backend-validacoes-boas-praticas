@@ -23,10 +23,10 @@ rotas.get('/usuario', detralarUsuario);
 rotas.put('/usuario', atualizarUsuario)
 rotas.get('/categoria', listarCategorias)
 rotas.get('/transacao', listarTransacoesUsuario)
+rotas.get('/transacao/extrato', extrato);
 rotas.get('/transacao/:id', detalheTransacaoUsuarioLogado);
 rotas.post('/transacao', cadastrarTransacaoUsuario)
 rotas.put('/transacao/:id', editarTransacao);
 rotas.delete('/transacao/:id', excluirTransacaoUsuario)
-rotas.get('/transacao/extrato', extrato);
 
 module.exports = rotas
