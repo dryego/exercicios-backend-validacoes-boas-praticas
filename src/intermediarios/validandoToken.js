@@ -1,6 +1,5 @@
-const pool = require('../conexão/conexao')
 const jwt = require('jsonwebtoken')
-const key = require('../senha')
+const knex = require('../conexão/conexao')
 
 const validadorToken = async (req, res, next) => {
     const { authorization } = req.headers
@@ -13,20 +12,23 @@ const validadorToken = async (req, res, next) => {
 
         const token = authorization.split(" ")[1]
 
-        const { id } = jwt.verify(token, key)
+        const { id } = jwt.verify(token, process.env.SENHA_TOKEN)
 
-        const usuario = await pool.query('select * from usuarios where id = $1', [id])
+        const usuario = await knex('usuarios').where({ id }).first();
 
-        if (usuario.rowCount < 1) {
+        if (usuario === undefined) {
             return res.status(401).json({ "mensagem": "Não autorizado." })
         }
 
-        req.usuario = usuario.rows[0]
+        req.usuario = usuario
 
         next()
     } catch (error) {
-        return res.status(500).json({ "mensagem": "Erro no servidor." })
+        return res.status(500).json({ "mensagem": error.message })
     }
 }
 
-module.exports = { validadorToken }
+module.exports = {
+    validadorToken
+
+}

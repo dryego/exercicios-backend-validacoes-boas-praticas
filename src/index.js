@@ -1,3 +1,11 @@
-const app = require("./servidor");
+require("dotenv").config();
+const express = require('express')
+const rotas = require('./rotas/rotas')
 
-app.listen(3000, () => { console.log('Servidor rodando na porta: http://localhost:3000'); })
+const app = express()
+
+app.use(express.json())
+
+app.use(rotas)
+
+app.listen(process.env.PORT, console.log('Servidor Inicializado...'));

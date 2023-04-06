@@ -1,41 +1,36 @@
-const pool = require('../conexão/conexao');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const key = require('../senha')
+const knex = require('../conexão/conexao');
+const { buscarUsuario } = require('../utils/FuncoesDeValidacoes');
 
 const login = async (req, res) => {
     const { email, senha } = req.body
 
     try {
-        if (!email) {
-            return res.status(400).json({ mensagem: 'Email é um campo obrigatório.' });
-        }
 
-        if (!senha) {
-            return res.status(400).json({ mensagem: 'Senha é um campo obrigatório.' });
-        }
+        const localizarUsuario = await buscarUsuario(email);
 
-        const localizarUsuario = await pool.query('select * from usuarios where email = $1', [email]);
-
-
-        if (localizarUsuario.rowCount < 1) {
+        if (localizarUsuario === undefined) {
             return res.status(401).json({ "mensagem": "Usuário e/ou senha inválido(s)." })
         }
 
-        const verificacaoSenha = await bcrypt.compare(senha, localizarUsuario.rows[0].senha)
+        const verificacaoSenha = await bcrypt.compare(senha, localizarUsuario.senha)
 
         if (!verificacaoSenha) {
             return res.status(401).json({ "mensagem": "Usuário e/ou senha inválido(s)." })
         }
 
-        const token = jwt.sign({ id: localizarUsuario.rows[0].id }, key, { expiresIn: '8h' })
+        const token = jwt.sign({ id: localizarUsuario.id }, process.env.SENHA_TOKEN, { expiresIn: '8h' })
 
-        const { senha: _, ...usuario } = localizarUsuario.rows[0]
+        const { senha: _, ...usuario } = localizarUsuario
 
         return res.status(200).json({ usuario, token })
     } catch (error) {
-        return res.status(500).json({ mensagem: "Error no servidor." })
+        console.log(error);
+        return res.status(500).json({ mensagem: error.message });
     }
 }
 
-module.exports = login
+module.exports = {
+    login
+}
